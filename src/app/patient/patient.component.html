@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+    <span [routerLink]="['/patient']">Egészségügyi Adatfeltöltő</span>
+    <span class="spacer"></span>
+    <span class="new-patient" (click)="openDialog()">Új adat felvétele</span>
+    <button  class="logout" mat-button [matMenuTriggerFor]="menu">{{name}}</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item>Kijelentkezés</button>
+    </mat-menu>
+</mat-toolbar>
+
+<mat-card>Feltöltött mérések</mat-card>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- vernyomas -->
+    <ng-container matColumnDef="blood-pressure">
+        <th mat-header-cell *matHeaderCellDef> Vérnyomás </th>
+        <td mat-cell *matCellDef="let element"> {{element.bloodPressure}} </td>
+    </ng-container>
+
+    <!-- suly -->
+    <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef> Súly </th>
+        <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+    </ng-container>
+
+    <!-- vercukor -->
+    <ng-container matColumnDef="blood-sugar">
+        <th mat-header-cell *matHeaderCellDef> Vércukor </th>
+        <td mat-cell *matCellDef="let element"> {{element.bloodSugar}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>

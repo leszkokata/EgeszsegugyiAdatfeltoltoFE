@@ -1,0 +1,55 @@
+<mat-toolbar color="primary">
+    <span [routerLink]="['/doctor']">Egészségügyi Adatfeltöltő</span>
+    <span class="spacer"></span>
+    <span class="new-patient" (click)="openDialog()" >Páciens felvétele</span>
+    <button  class="logout" mat-button [matMenuTriggerFor]="menu">{{name}}</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)=clickLogout()>Kijelentkezés</button>
+    </mat-menu>
+</mat-toolbar>
+
+<div *ngIf="!details">
+<mat-card>Páciensek listája</mat-card>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- emailcimek -->
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email címek </th>
+        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)=seeDetails()></tr>
+
+</table>
+</div>
+
+
+<div *ngIf="details">
+    <button mat-icon-button color="primary" aria-label="Vissza a páciensekhez" class="backButton">
+        <mat-icon (click)=backToPatients()>keyboard_backspace</mat-icon>
+      </button>
+    <table mat-table [dataSource]="patientDataSource" class="mat-elevation-z8">
+        <!-- vernyomas -->
+        <ng-container matColumnDef="bloodpressure">
+            <th mat-header-cell *matHeaderCellDef> Vérnyomás </th>
+            <td mat-cell *matCellDef="let element"> {{element.bloodPressure}} </td>
+        </ng-container>
+    
+        <!-- suly -->
+        <ng-container matColumnDef="weight">
+            <th mat-header-cell *matHeaderCellDef> Súly </th>
+            <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+        </ng-container>
+    
+        <!-- vercukor -->
+        <ng-container matColumnDef="bloodsugar">
+            <th mat-header-cell *matHeaderCellDef> Vércukor </th>
+            <td mat-cell *matCellDef="let element"> {{element.bloodSugar}} </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedPatientColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedPatientColumns;"></tr>
+    
+    </table>
+</div>

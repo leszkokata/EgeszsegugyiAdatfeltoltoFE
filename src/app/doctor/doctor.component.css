@@ -1,0 +1,35 @@
+.new-patient {
+    padding: 0 14px;
+    font-size: 15px;
+}
+
+.logout {
+    padding: 0 14px;
+}
+.spacer {
+    flex: 1 1 auto;
+}
+
+.mat-card {
+    width: 77%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.mat-table {
+    width: 80%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+th, td {
+    overflow: hidden;
+    width: 33%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+.backButton {
+    margin-left: 30px;
+    margin-top: 10px;
+}

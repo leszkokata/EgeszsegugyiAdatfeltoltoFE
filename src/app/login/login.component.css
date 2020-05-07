@@ -1,0 +1,14 @@
+.form {
+    width: 200px;
+    margin: auto;
+    padding-top: 50px;
+}
+
+.email, .password {
+    width: 100%;
+}
+
+.buttondiv {
+    justify-content: center;
+    display: flex;
+}
