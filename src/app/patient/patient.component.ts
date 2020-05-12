@@ -1,31 +1,17 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { PatientService } from '../services/patient.service';
-
-export interface PatientData {
-  bloodPressure: number;
-  weight: number;
-  bloodSugar: number;
-}
+import { PatientService, MeasurementModel } from '../services/patient.service';
+import { LoginService } from '../services/login.service';
+import { Router } from '@angular/router';
 
 export interface MesurementData {
   patient: string;
-  date: Date,
-  bloodPressure: number,
-  bloodSugar: number,
-  weight: number,
-  comment: string
+  date: Date;
+  bloodPressure: number;
+  bloodSugar: number;
+  weight: number;
+  comment: string;
 }
-
-const ELEMENT_DATA: PatientData[] = [
-  { bloodPressure: 120, weight: 60, bloodSugar: 5 },
-  { bloodPressure: 120, weight: 61, bloodSugar: 6 },
-  { bloodPressure: 123, weight: 59, bloodSugar: 5 },
-  { bloodPressure: 120, weight: 61, bloodSugar: 5 },
-  { bloodPressure: 121, weight: 60, bloodSugar: 6 },
-  { bloodPressure: 120, weight: 59, bloodSugar: 5 },
-  { bloodPressure: 119, weight: 60, bloodSugar: 5 }
-];
 
 @Component({
   selector: 'app-patient',
@@ -36,49 +22,71 @@ const ELEMENT_DATA: PatientData[] = [
 export class PatientComponent implements OnInit {
   name: string;
   username: string;
+  password:string;
 
   bloodPressure: number;
   weight: number;
   bloodSugar: number;
-
+  comment: string;
+  date = new Date();
   mesurements: any;
+  dataSource: any;
 
-  constructor(public dialog: MatDialog, private patientService: PatientService) {
+  constructor(private router: Router,public dialog: MatDialog, private patientService: PatientService, private loginService: LoginService) {
     this.name = this.patientService.getName();
     this.username = this.patientService.getUsername();
   }
 
   ngOnInit(): void {
     this.getMesurementData();
-    //console.log("mesurements:" + this.mesurements);
   }
 
-  displayedColumns: string[] = ['blood-pressure', 'weight', 'blood-sugar'];
-  dataSource = ELEMENT_DATA;
+  displayedColumns: string[] = ['blood-pressure', 'weight', 'blood-sugar', 'comment'];
+
 
   openDialog(): void {
     const dialogRef = this.dialog.open(NewDataDialog, {
       width: '250px',
-      data: { bloodPressure: this.bloodPressure, weight: this.weight, bloodSugar: this.bloodSugar }
+      data: { bloodPressure: this.bloodPressure, weight: this.weight, bloodSugar: this.bloodSugar, comment: this.comment, date: this.date }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result) {
         console.log(result);
+        this.addMeasurement(result);
       }
 
     });
   }
 
   getMesurementData() {
-    this.mesurements = this.patientService.getMesurementData(this.username).subscribe(data => {
-      console.log('data', data);
-      //localStorage.setItem('username', this.username);
-      //  this.patientService.setName(data.name);
+    this.patientService.getMesurementData().subscribe(data => {
+      this.mesurements = data.message;
+      this.dataSource = this.mesurements.map(item => {
+        //const temp = new Array<MesurementData>();
+          return {bloodPressure: item.bloodPressure,bloodSugar: item.bloodSugar, patient:item.patient,
+            weight: item.weight, comment:item.comment, date: item.date};
+      })
+      console.log(this.dataSource);
+    });
+  }
 
-      
+  addMeasurement(result:any) {
+    this.patientService.addMeasurement(this.username, result.bloodPressure, result.bloodSugar,
+      result.weight, this.date,result.comment).subscribe(data => {
+      console.log('data', data);
     }, error => {
+      console.log('error', error);
+    });
+  }
+
+  clickLogout() {
+    this.loginService.logout(this.username, this.password).subscribe(data => {
+      console.log('data',data);
+      localStorage.clear();
+      this.router.navigate(['/login']);
+    },error =>{
       console.log('error', error);
     });
   }
@@ -91,10 +99,10 @@ export class PatientComponent implements OnInit {
 })
 export class NewDataDialog {
 
-  dialogData: PatientData;
+  dialogData: MesurementData;
   constructor(
     public dialogRef: MatDialogRef<NewDataDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: PatientData) {
+    @Inject(MAT_DIALOG_DATA) public data: MesurementData) {
     this.dialogData = data;
   }
 

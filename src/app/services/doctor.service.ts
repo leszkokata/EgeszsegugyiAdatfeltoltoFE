@@ -11,15 +11,24 @@ export class DoctorService {
 
   constructor(private http: HttpClient) { }
 
-  getPatients(username: string):Observable<any> {
+  getPatients():Observable<any> {
     const httpOptions = {
       withCredentials: true,
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
+    return this.http.get('http://localhost:8080/doctor/patientsList', httpOptions);
+  }
 
-    return this.http.post('http://localhost:8080/patientsList', {username:username}, httpOptions);
+  getPatientData(name: string):Observable<any> {
+    const httpOptions = {
+      withCredentials: true,
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.get('http://localhost:8080/doctor/'+ name, httpOptions);
   }
 
   setName(val: string){

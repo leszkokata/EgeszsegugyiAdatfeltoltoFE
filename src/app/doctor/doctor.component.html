@@ -1,7 +1,6 @@
 <mat-toolbar color="primary">
     <span [routerLink]="['/doctor']">Egészségügyi Adatfeltöltő</span>
     <span class="spacer"></span>
-    <span class="new-patient" (click)="openDialog()" >Páciens felvétele</span>
     <button  class="logout" mat-button [matMenuTriggerFor]="menu">{{name}}</button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item (click)=clickLogout()>Kijelentkezés</button>
@@ -12,14 +11,19 @@
 <mat-card>Páciensek listája</mat-card>
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!--nevek-->
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Név </th>
+        <td mat-cell *matCellDef="let element" #name> {{element.name}} </td>
+    </ng-container>
     <!-- emailcimek -->
     <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef> Email címek </th>
+        <th mat-header-cell *matHeaderCellDef> Email cím </th>
         <td mat-cell *matCellDef="let element"> {{element.email}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)=seeDetails()></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="seeDetails(row.name)"></tr>
 
 </table>
 </div>
@@ -46,6 +50,13 @@
         <ng-container matColumnDef="bloodsugar">
             <th mat-header-cell *matHeaderCellDef> Vércukor </th>
             <td mat-cell *matCellDef="let element"> {{element.bloodSugar}} </td>
+        </ng-container>
+
+            
+        <!-- komment -->
+        <ng-container matColumnDef="comment">
+            <th mat-header-cell *matHeaderCellDef> Megjegyzés </th>
+            <td mat-cell *matCellDef="let element"> {{element.comment}} </td>
         </ng-container>
     
         <tr mat-header-row *matHeaderRowDef="displayedPatientColumns"></tr>

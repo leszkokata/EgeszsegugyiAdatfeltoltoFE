@@ -4,29 +4,25 @@ import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { DoctorService } from '../services/doctor.service';
 
-
+//paciensek adatmodellje
 export interface PatientData {
+  name: string;
   email: string;
   password?: string;
+  age?: number;
+  gender?: string;
+  doctor?: string;
 }
 
-export interface PatientDetails {
-  bloodPressure: number;
-  weight: number;
-  bloodSugar: number;
+// orvosok adatmodellje
+export interface DoctorData {
+  name: string;
+  email: string;
+  password: string;
+  age: number;
+  gender: string;
+  profession: string;
 }
-
-const PATIENT_DATA: PatientDetails[] = [
-  {bloodPressure: 120, weight:60, bloodSugar:5}
-];
-
-const ELEMENT_DATA: PatientData[] = [
-  {email: "kisjani@gmail.com"},
-  {email: "tesztuser@gmail.com"},
-  {email: "abc123@gmail.com"},
-  {email: "mindegy@gmail.com"},
-  {email: "valami@gmail.com"}
-];
 
 @Component({
   selector: 'app-doctor',
@@ -40,6 +36,12 @@ export class DoctorComponent implements OnInit {
   email: string;
   password:string;
   details: boolean;
+  patients: any;
+  
+//  patientName: string;
+
+  dataSource: any;
+  patientDataSource: any;
 
   constructor(private router: Router, public dialog: MatDialog, private loginService: LoginService, private doctorService: DoctorService) {
     this.details = false;
@@ -47,32 +49,37 @@ export class DoctorComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.getPatients();
   }
 
-  displayedColumns: string[] = ['email'];
-  displayedPatientColumns: string[] = ['bloodpressure', 'weight', 'bloodsugar'];
-  dataSource = ELEMENT_DATA;
-  patientDataSource = PATIENT_DATA;
+  displayedColumns: string[] = ['name','email'];
+  displayedPatientColumns: string[] = ['bloodpressure', 'weight', 'bloodsugar', 'comment'];
 
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(NewPatientDialog, {
-      width: '250px',
-      data: {email: this.email, password: this.password }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if(result){
-        console.log(result);
-      }
-      
+  // paciensek listazasa
+  getPatients(){
+    this.doctorService.getPatients().subscribe(data => {
+      this.patients = data.message;
+      //a serverrol erkezo adatok megfelelo formatumra alakitasa
+      this.dataSource = this.patients.map(item => {
+          return {name: item.name, email: item.email};
+      })
+      console.log(this.dataSource);
     });
   }
 
-  
-  seeDetails(): void {
+  // egy paciens mereseinek listazasa
+  seeDetails(patientName: any): void {
     this.details = true;
+   // this.patientName = this.name;
+    console.log(patientName);
+    this.doctorService.getPatientData(patientName).subscribe(data => {
+      this.patients = data.message;
+      this.patientDataSource = this.patients.map(item => {
+          return {bloodPressure: item.bloodPressure,bloodSugar: item.bloodSugar,
+            weight: item.weight, comment:item.comment};
+      })
+      console.log(this.patientDataSource);
+    });
   }
 
   backToPatients(): void {
@@ -83,28 +90,13 @@ export class DoctorComponent implements OnInit {
     this.router.navigate(['/login', {msg: 'I came back from the dashboard'}]);
   }
 
+  //kijelentkezes, visszairanyitas a login oldalra
   clickLogout() {
     this.loginService.logout(this.username, this.password).subscribe(data => {
-      console.log('data',data);
       localStorage.clear();
       this.router.navigate(['/login']);
     },error =>{
       console.log('error', error);
     });
   }
-}
-
-@Component({
-  selector: 'new-patient-dialog',
-  templateUrl: 'new-patient-dialog.html',
-})
-export class NewPatientDialog {
-
-  dialogData: PatientData;
-  constructor(
-    public dialogRef: MatDialogRef<NewPatientDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: PatientData) {
-      this.dialogData = data;
-    }
-
 }

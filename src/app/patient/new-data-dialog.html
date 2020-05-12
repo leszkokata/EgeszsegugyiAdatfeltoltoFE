@@ -4,7 +4,6 @@
     <mat-label>Vérnyomás</mat-label>
     <input matInput type="number" [(ngModel)]="dialogData.bloodPressure">
   </mat-form-field>
- 
   <mat-form-field>
     <mat-label>Súly</mat-label>
     <input matInput type="number" [(ngModel)]="dialogData.weight">
@@ -12,6 +11,10 @@
   <mat-form-field>
     <mat-label>Vércukor</mat-label>
     <input matInput type="number" [(ngModel)]="dialogData.bloodSugar">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Megjegyzés</mat-label>
+    <input matInput type="text" [(ngModel)]="dialogData.comment">
   </mat-form-field>
 </div>
 

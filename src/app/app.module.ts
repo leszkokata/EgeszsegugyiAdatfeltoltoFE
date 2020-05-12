@@ -7,8 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { LoginComponent } from './login/login.component';
-import { DoctorComponent,NewPatientDialog } from './doctor/doctor.component';
+import { LoginComponent, RegisterPatientDialog, RegisterDoctorDialog } from './login/login.component';
+import { DoctorComponent } from './doctor/doctor.component';
 import { PatientComponent, NewDataDialog } from './patient/patient.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
@@ -28,7 +28,8 @@ import { HttpClientModule } from '@angular/common/http';
     DoctorComponent,
     PatientComponent,
     NewDataDialog,
-    NewPatientDialog
+    RegisterPatientDialog,
+    RegisterDoctorDialog
   ],
   imports: [
     BrowserModule,
@@ -52,7 +53,9 @@ import { HttpClientModule } from '@angular/common/http';
   exports: [
   ],
   entryComponents: [
-    NewDataDialog
+    NewDataDialog,
+    RegisterPatientDialog,
+    RegisterDoctorDialog
   ],
   providers: [
     

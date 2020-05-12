@@ -24,7 +24,7 @@
 
 th, td {
     overflow: hidden;
-    width: 33%;
+    width: 25%;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

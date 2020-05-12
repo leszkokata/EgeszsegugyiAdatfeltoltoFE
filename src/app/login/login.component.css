@@ -12,3 +12,16 @@
     justify-content: center;
     display: flex;
 }
+
+.registerDoctorButtonDiv {
+    justify-content: center;
+    display: flex;
+    padding: 5px;
+    padding-top:50px;
+}
+
+.registerPatientButtonDiv {
+    justify-content: center;
+    display: flex;
+    padding: 5px;
+}
